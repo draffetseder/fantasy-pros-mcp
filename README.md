@@ -1,8 +1,20 @@
 # FantasyPros MCP Server
 
+[![smithery badge](https://smithery.ai/badge/@DynamicEndpoints/fantasy-pros-mcp)](https://smithery.ai/server/@DynamicEndpoints/fantasy-pros-mcp)
+
 An MCP server that provides access to the FantasyPros API for sports data, news, rankings, and projections.
 
 ## Setup
+
+### Installing via Smithery
+
+To install fantasy-pros-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@DynamicEndpoints/fantasy-pros-mcp):
+
+```bash
+npx -y @smithery/cli install @DynamicEndpoints/fantasy-pros-mcp --client claude
+```
+
+### Manual Installation
 
 1. Get a FantasyPros API key by emailing them
 2. Create a `.env` file and add your API key:
