@@ -115,8 +115,41 @@ class FantasyProsServer {
                 enum: ['STD', 'PPR', 'HALF'],
                 description: 'Scoring type (for NFL)',
               },
+              type: {
+                type: 'string',
+                enum: ['WW', 'WAIVER', 'ROS', 'DRAFT'],
+                description: 'Type of rankings to retrieve',
+              },
             },
             required: ['sport'],
+          },
+        },
+        {
+          name: 'get_weekly_rankings',
+          description: 'Get consensus rankings for a sport for a specific week',
+          inputSchema: {
+            type: 'object',
+            properties: {
+              sport: {
+                type: 'string',
+                enum: ['nfl', 'nba'],
+                description: 'Sport to get rankings for',
+              },
+              position: {
+                type: 'string',
+                description: 'Position to filter by',
+              },
+              scoring: {
+                type: 'string',
+                enum: ['STD', 'PPR', 'HALF'],
+                description: 'Scoring type (for NFL)',
+              },
+              week: {
+                type: 'string',
+                description: 'Week number (for NFL), >= 0',
+              },
+            },
+            required: ['sport', 'position', 'week'],
           },
         },
         {
@@ -178,6 +211,8 @@ class FantasyProsServer {
             return await this.getPlayers(request.params.arguments);
           case 'get_rankings':
             return await this.getRankings(request.params.arguments);
+          case 'get_weekly_rankings':
+            return await this.getWeeklyRankings(request.params.arguments);
           case 'get_projections':
             return await this.getProjections(request.params.arguments);
           case 'get_all_news':
@@ -239,12 +274,37 @@ class FantasyProsServer {
     };
   }
 
-  private async getRankings(args: any) {
-    const { sport, position = 'ALL', scoring = 'STD' } = args;
+  private async getWeeklyRankings(args: any) {
+    const { sport, position = 'QB', scoring = 'HALF', week } = args;
     const season = new Date().getFullYear().toString();
     const params: any = {
       position,
       scoring,
+      week
+    };
+
+    const response = await this.axiosInstance.get(
+      `/${sport}/${season}/consensus-rankings`,
+      { params }
+    );
+    console.log('Rankings response:', response.data);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: JSON.stringify(response.data, null, 2),
+        },
+      ],
+    };
+  }
+
+  private async getRankings(args: any) {
+    const { sport, position = 'ALL', scoring = 'HALF', type = 'ROS' } = args;
+    const season = new Date().getFullYear().toString();
+    const params: any = {
+      position,
+      scoring,
+      type
     };
 
     const response = await this.axiosInstance.get(
