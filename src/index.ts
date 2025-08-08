@@ -32,7 +32,7 @@ class FantasyProsServer {
     );
 
     this.axiosInstance = axios.create({
-      baseURL: 'https://api.fantasypros.com/public/v2',
+      baseURL: 'https://api.fantasypros.com/public/v2/json',
       headers: {
         'x-api-key': API_KEY,
       },
@@ -286,7 +286,7 @@ class FantasyProsServer {
     const params: any = { limit };
     if (category) params.category = category;
 
-    const response = await this.axiosInstance.get('/json/all/news', { params });
+    const response = await this.axiosInstance.get('/all/news', { params });
     return {
       content: [
         {
